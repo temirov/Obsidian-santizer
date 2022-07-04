@@ -1,0 +1,12 @@
+from enum import Enum
+
+
+class FileCmp(Enum):
+    IDENTICAL = 0
+    LEFT_CONTAINS_RIGHT = 1
+    RIGHT_CONTAINS_LEFT = 2
+    DIFFERENT = 3
+    TBD = 4
+    ONE_FILE = 5
+    ONE_FILE_CORRECT_EXTENSION = 6
+    ONE_FILE_INCORRECT_EXTENSION = 7
