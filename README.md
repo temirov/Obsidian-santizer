@@ -35,16 +35,14 @@ The project uses [vimdiff](https://linux.die.net/man/1/vimdiff#:~:text=Vimdiff%2
 
 ### Useful vimdiff shortcuts
 
-|
-|Shortcut|Action|
-| ------------- | ------------- |
-|`]c`| jump to the next change|
-|`[c`|jump to the previous change
-|`do`|get changes from other window into the current window
-|`dp`|put the changes from current window into the other window
-|`:xa`|save all changes and close Vim
-|`:windo`|set wrapped lines in both screens
-|
+| Shortcut          | Action                                                    |
+|-------------------|-----------------------------------------------------------|
+| `]c`              | jump to the next change                                   |
+| `[c`              | jump to the previous change                               |
+| `do`              | get changes from other window into the current window     |
+| `dp`              | put the changes from current window into the other window |
+| `:xa`             | save all changes and close Vim                            |
+| `:windo set wrap` | set wrapped lines in both screens                         |
 
 ## Help needed
 
