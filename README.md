@@ -49,3 +49,6 @@ The project uses [vimdiff](https://linux.die.net/man/1/vimdiff#:~:text=Vimdiff%2
 1. Tests are dismal. Any improvements are welcome
 2. Documentation is lacking. Any improvements are welcome
 3. Extra features
+   1. Find duplicate files regardless of their location
+   2. Deflate a folder: recursively move all files in subdir to the dir and remove subdirs
+   3. Add an ability to prepend YAML templates to markdown files
