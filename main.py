@@ -36,7 +36,7 @@ def __parse_args():
     return parser.parse_args()
 
 
-def __sanitize_system(path_sanitizer: PathSanitizer, resource_folder: Path, glob: str) -> bool:
+def __sanitize_system__(path_sanitizer: PathSanitizer, resource_folder: Path, glob: str) -> bool:
     return path_sanitizer.remove_mac_system_files() \
            and path_sanitizer.remove_empty_files() \
            and path_sanitizer.remove_empty_folders() \
@@ -68,10 +68,7 @@ def main() -> None:
         system_utils
     )
 
-    if __sanitize_system(path_sanitizer, resource_folder, arguments.glob):
-        # obsidian_sanitizer = ObsidianSanitizer(logger, file_system_utils)
-        # obsidian_sanitizer.sanitize(arguments.source_folder, arguments.glob)
-        # if __sanitize_system(path_sanitizer, arguments.glob):
+    if __sanitize_system__(path_sanitizer, resource_folder, arguments.glob):
         logger.log("DONE")
 
 
