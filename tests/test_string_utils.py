@@ -19,6 +19,13 @@ class TestStringUtils(TestCase):
         actual = StringUtils.expand_and_remove_suffix(file_name, suffix)
         self.assertEqual(expected, actual)
 
+    def test_expand_and_remove_double_glob_suffix(self):
+        file_name = "workspace_SM-G998U1_Feb-03-2234-2022_1_SM-G998U1_May-15-1332-2022_1.md"
+        suffix = "*_SM-G998U1_*"
+        expected = "workspace.md"
+        actual = StringUtils.expand_and_remove_suffix(file_name, suffix)
+        self.assertEqual(expected, actual)
+
     def test_remove_substring(self):
         string = "*_SM-G998U1_*"
         expected = "_SM-G998U1_"
