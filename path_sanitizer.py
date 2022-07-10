@@ -84,7 +84,7 @@ class PathSanitizer:
             for file_path in self.path_utils.glob_path_walker(self.source_folder, constants.ALL_FILES, excluded_paths):
                 if not self.path_utils.is_hidden(file_path) and self.path_utils.is_md_candidate(file_path):
                     new_file_name = file_path.with_suffix(constants.MARKDOWN_EXTENSION)
-                    file_pair = FilePair(file_path, new_file_name, self.glob, self.system_utils, self.string_utils)
+                    file_pair = FilePair(file_path, new_file_name, self.system_utils, self.string_utils)
                     markdown_renaming_service = MarkdownRenamingService(file_pair)
 
                     self.system_utils.bool_func_wrapper(markdown_renaming_service)
@@ -97,7 +97,7 @@ class PathSanitizer:
                 if not self.path_utils.is_hidden(file_path) and self.path_utils.is_markup_file(file_path):
                     file_path_without_suffix = StringUtils.expand_and_remove_suffix(file_path.as_posix(), self.glob)
                     new_file_name = self.path_utils.as_path(file_path_without_suffix)
-                    file_pair = FilePair(file_path, new_file_name, self.glob, self.system_utils, self.string_utils)
+                    file_pair = FilePair(file_path, new_file_name, self.system_utils, self.string_utils)
                     md_renaming_service = MarkdownRenamingService(file_pair)
 
                     self.system_utils.bool_func_wrapper(md_renaming_service)
