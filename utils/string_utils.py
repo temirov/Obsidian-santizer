@@ -25,7 +25,7 @@ class StringUtils:
     @classmethod
     def expand_and_remove_suffix(cls, file_path: str, suffix: str) -> str:
         suffix_with_no_glob = cls.__suffix_with_no_glob(suffix)
-        expanded_regex_with_groups = f"(.+)({suffix_with_no_glob}.*)(\..*)"
+        expanded_regex_with_groups = f"(.+?)({suffix_with_no_glob}.*)(\..*)"
         return re.sub(expanded_regex_with_groups, r'\1\3', file_path)
 
     @classmethod
@@ -35,6 +35,10 @@ class StringUtils:
     @classmethod
     def remove_suffix(cls, string: str, suffix: str) -> str:
         return string.removesuffix(suffix)
+
+    @classmethod
+    def as_before_glob(cls, string) -> str:
+        return f"*{string}"
 
     @classmethod
     def __suffix_with_no_glob(cls, suffix: str):
@@ -50,6 +54,13 @@ class StringUtils:
 
     @classmethod
     def trim(cls, content: str, top: Optional[int] = None, bottom: Optional[int] = None) -> Iterator[str]:
+        """
+        Removes top and bottom lines in the text
+        :param content: multi-lined text, separated by CR
+        :param top: the number of lines to remove from the top
+        :param bottom: the number of lines to remove from the bottom
+        :return:
+        """
         if top is None:
             top = 1
         if bottom is None:

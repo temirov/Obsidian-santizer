@@ -51,6 +51,15 @@ class FilePair:
             return self.left_file
         elif self.right_file.exists():
             return self.right_file
+        else:
+            raise RuntimeError("Both files are gone!")
+
+    def __deleted_file__(self) -> Path:
+        remaining_file = self.__remaining_file__()
+        for file in [self.left_file, self.right_file]:
+            if file != remaining_file:
+                return file
+        raise RuntimeError("Must be a bug")
 
     def has_markdown_extension(self) -> bool:
         return self.__remaining_file__().suffix == constants.MARKDOWN_EXTENSION
@@ -59,12 +68,7 @@ class FilePair:
         return not self.has_markdown_extension()
 
     def rename(self) -> bool:
-        return self.system_utils.bool_func_wrapper(
-            self.__remaining_file__().rename, self.__remaining_file__().with_suffix(constants.MARKDOWN_EXTENSION))
-
-    def rename_glob(self) -> bool:
-        return self.system_utils.bool_func_wrapper(
-            self.__remaining_file__().rename, self.__remaining_file__().with_suffix(constants.MARKDOWN_EXTENSION))
+        return self.system_utils.bool_func_wrapper(self.__remaining_file__().rename, self.__deleted_file__().as_posix())
 
     def merge(self):
         return self.system_utils.open_merge_program(self.left_file, self.right_file, constants.VIM_MERGE_PROGRAM)

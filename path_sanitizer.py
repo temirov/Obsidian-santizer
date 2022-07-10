@@ -44,9 +44,26 @@ class PathSanitizer:
 
         return self.system_utils.bool_func_wrapper(walker_function)
 
+    def move_non_markdown_files(self, resource_folder: Path, sus_folder: Path) -> bool:
+        glob_markdown_extension = self.string_utils.as_before_glob(constants.MARKDOWN_EXTENSION)
+        if not sus_folder.exists():
+            sus_folder.mkdir()
+
+        def walker_function():
+            for file_path in self.path_utils.glob_path_walker(self.source_folder, glob_markdown_extension,
+                                                              [resource_folder]):
+                if self.path_utils.is_json_file(file_path):
+                    destination = sus_folder.joinpath(file_path.name)
+                    self.logger.log(f"{file_path} is a JSON file")
+                    self.logger.log(f"Moving {file_path} to {destination}")
+                    self.system_utils.bool_func_wrapper(file_path.rename, destination)
+
+        return self.system_utils.bool_func_wrapper(walker_function)
+
     def move_to_resources_folder(self, resource_folder: Path) -> bool:
         def walker_function():
-            for file_path in self.path_utils.glob_path_walker(self.source_folder, constants.ALL_FILES):
+            for file_path in self.path_utils.glob_path_walker(self.source_folder, constants.ALL_FILES,
+                                                              [resource_folder]):
                 if (file_path.is_file()
                         and not self.path_utils.is_in_folder(file_path, constants.OBSIDIAN_RESOURCE_FOLDER)
                         and not self.path_utils.is_json_file(file_path)
@@ -62,25 +79,25 @@ class PathSanitizer:
 
         return self.system_utils.bool_func_wrapper(walker_function)
 
-    def rename_markdown_files_with_no_extension(self) -> bool:
+    def rename_markdown_files_with_no_extension(self, excluded_paths: list[Path]) -> bool:
         def walker_function():
-            for file_path in self.path_utils.glob_path_walker(self.source_folder, constants.ALL_FILES):
+            for file_path in self.path_utils.glob_path_walker(self.source_folder, constants.ALL_FILES, excluded_paths):
                 if not self.path_utils.is_hidden(file_path) and self.path_utils.is_md_candidate(file_path):
                     new_file_name = file_path.with_suffix(constants.MARKDOWN_EXTENSION)
-                    file_pair = FilePair(file_path, new_file_name, self.system_utils, self.string_utils)
+                    file_pair = FilePair(file_path, new_file_name, self.glob, self.system_utils, self.string_utils)
                     markdown_renaming_service = MarkdownRenamingService(file_pair)
 
                     self.system_utils.bool_func_wrapper(markdown_renaming_service)
 
         return self.system_utils.bool_func_wrapper(walker_function)
 
-    def rename_similar_markdown_files(self) -> bool:
+    def rename_similar_markdown_files(self, excluded_paths: list[Path]) -> bool:
         def walker_function():
-            for file_path in self.path_utils.glob_path_walker(self.source_folder, self.glob):
+            for file_path in self.path_utils.glob_path_walker(self.source_folder, self.glob, excluded_paths):
                 if not self.path_utils.is_hidden(file_path) and self.path_utils.is_markup_file(file_path):
                     file_path_without_suffix = StringUtils.expand_and_remove_suffix(file_path.as_posix(), self.glob)
                     new_file_name = self.path_utils.as_path(file_path_without_suffix)
-                    file_pair = FilePair(file_path, new_file_name, self.system_utils, self.string_utils)
+                    file_pair = FilePair(file_path, new_file_name, self.glob, self.system_utils, self.string_utils)
                     md_renaming_service = MarkdownRenamingService(file_pair)
 
                     self.system_utils.bool_func_wrapper(md_renaming_service)
