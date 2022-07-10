@@ -36,15 +36,17 @@ def __parse_args():
     return parser.parse_args()
 
 
-def __sanitize_system__(path_sanitizer: PathSanitizer, resource_folder: Path, glob: str) -> bool:
+def __sanitize_system__(path_sanitizer: PathSanitizer, resource_folder: Path, sus_folder: Path, glob: str) -> bool:
     return path_sanitizer.remove_mac_system_files() \
            and path_sanitizer.remove_empty_files() \
            and path_sanitizer.remove_empty_folders() \
            and path_sanitizer.move_folders(f"*{constants.MARKDOWN_EXTENSION}") \
            and path_sanitizer.move_folders(glob) \
-           and path_sanitizer.rename_markdown_files_with_no_extension() \
-           and path_sanitizer.rename_similar_markdown_files() \
-           and path_sanitizer.move_to_resources_folder(resource_folder)
+           and path_sanitizer.move_non_markdown_files(resource_folder, sus_folder) \
+           and path_sanitizer.rename_markdown_files_with_no_extension([resource_folder]) \
+           and path_sanitizer.rename_similar_markdown_files([resource_folder]) \
+           and path_sanitizer.move_to_resources_folder(resource_folder) \
+           and path_sanitizer.remove_empty_folders()
 
 
 def main() -> None:
@@ -52,12 +54,15 @@ def main() -> None:
     logger = Logger(arguments.log_level)
     path_utils = PathUtils()
     resource_folder = PathUtils.as_path(arguments.source_folder).joinpath(constants.OBSIDIAN_RESOURCE_FOLDER)
+    sus_folder = (PathUtils.as_path(arguments.source_folder)
+                  .joinpath(constants.OBSIDIAN_RESOURCE_FOLDER)
+                  .joinpath(constants.OBSIDIAN_SUSPICIOUS_FOLDER)
+                  )
+    system_utils = SystemUtils(logger)
+    string_utils = StringUtils()
 
     for folder in [arguments.source_folder, resource_folder]:
         path_utils.raise_when_no_folder(folder)
-
-    system_utils = SystemUtils(logger)
-    string_utils = StringUtils()
 
     path_sanitizer = PathSanitizer(
         arguments.source_folder,
@@ -68,7 +73,7 @@ def main() -> None:
         system_utils
     )
 
-    if __sanitize_system__(path_sanitizer, resource_folder, arguments.glob):
+    if __sanitize_system__(path_sanitizer, resource_folder, sus_folder, arguments.glob):
         logger.log("DONE")
 
 

@@ -7,9 +7,12 @@ from services.mime_detection_service import MimeDetectionService
 
 class PathUtils:
     @classmethod
-    def glob_path_walker(cls, folder: str, glob_pattern: str) -> Iterator[Path]:
+    def glob_path_walker(cls, folder: str, glob_pattern: str, excluded_paths: list[Path] = None) -> Iterator[Path]:
+        if excluded_paths is None:
+            excluded_paths = []
         for path in Path(folder).rglob(glob_pattern):
-            yield path
+            if not cls.__is_excluded__(path, excluded_paths):
+                yield path
 
     @classmethod
     def raise_when_no_folder(cls, folder: str) -> None:
@@ -82,3 +85,7 @@ class PathUtils:
     def __get_file_type__(cls, path: Path) -> str:
         mime_detection_service = MimeDetectionService(path)
         return mime_detection_service()
+
+    @classmethod
+    def __is_excluded__(cls, path: Path, excluded_paths: list[Path]) -> bool:
+        return any(path.is_relative_to(excluded) for excluded in excluded_paths)
