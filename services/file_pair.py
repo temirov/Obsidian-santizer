@@ -12,16 +12,12 @@ from utils.system_utils import SystemUtils
 class FilePair:
     left_file: Path
     right_file: Path
-    glob: str
     system_utils: SystemUtils
     string_utils: StringUtils
 
     def __compare__(self) -> FileCmp:
         file_comparison_service = FileComparisonService(self.left_file, self.right_file, self.string_utils)
         return file_comparison_service()
-
-    def has_glob(self) -> bool:
-        return self.string_utils.has_glob_suffix(self.__remaining_file__().as_posix(), self.glob)
 
     def are_different(self) -> bool:
         return self.__compare__() is FileCmp.DIFFERENT
