@@ -12,6 +12,7 @@ from utils.system_utils import SystemUtils
 class FilePair:
     left_file: Path
     right_file: Path
+    glob: str
     system_utils: SystemUtils
     string_utils: StringUtils
 
@@ -62,6 +63,9 @@ class FilePair:
 
     def has_no_markdown_extension(self) -> bool:
         return not self.has_markdown_extension()
+
+    def has_glob(self) -> bool:
+        return self.string_utils.has_glob_suffix(self.__remaining_file__().name, self.glob)
 
     def rename(self) -> bool:
         return self.system_utils.bool_func_wrapper(self.__remaining_file__().rename, self.__deleted_file__().as_posix())
