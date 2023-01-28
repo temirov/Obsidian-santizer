@@ -2,3 +2,5 @@
 old
 *.iml
 __pycache__
+env
+.vscode
