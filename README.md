@@ -5,6 +5,7 @@ Obsidian Sanitizer is a utility to clear clutter in obsidian markdown files.
 Over the usage of [Obsidian](https://obsidian.md) on different devices I have noticed that there are often duplicate files, de-synchronized notes and strange recursive folders. This utility is aiming at fixing the clutter, and is a collection of fixes for various issues I have encountered.
 
 ## Usage
+
 ```shell
 main.py --source <OBSIDIAN_FOLDER> --glob <GLOB> --log <WARN|INFO|DEBUG>
 ```
@@ -36,14 +37,14 @@ The project uses [vimdiff](https://linux.die.net/man/1/vimdiff#:~:text=Vimdiff%2
 ## Actions
 
 1. Removes Mac system files e.g. .DS_Store
-2. Removes empty filee
-3. Removes empty Folders
-4. Renames folders that have markdown extension
-4. Renames folders that match the provided glog pattern
-5. move_folders(glob) \
-6. Renames markdown files with no extension
-7. Renames markdown files that match the provided glog pattern
-8. move_to_resources_folder(resource_folder)
+1. Removes empty filee
+1. Removes empty Folders
+1. Renames folders that have markdown extension
+1. Renames folders that match the provided glog pattern
+1. move_folders(glob) \
+1. Renames markdown files with no extension
+1. Renames markdown files that match the provided glog pattern
+1. move_to_resources_folder(resource_folder)
 
 ## Finite State Machine
 
