@@ -33,6 +33,7 @@ The project uses [vimdiff](https://linux.die.net/man/1/vimdiff#:~:text=Vimdiff%2
 | `:xa`             | save all changes and close Vim                            |
 | `:diffupdate`     | refresh the changes in both panes                         |
 | `:windo set wrap` | set wrapped lines in both screens                         |
+| `Ctrl+w+w`        | switch between the panes                                  |
 
 ## Actions
 
