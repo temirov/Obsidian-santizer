@@ -7,6 +7,7 @@ FILE_DATETIME_FORMAT = f"{FILE_DATE_FORMAT} %H%M%S"
 LOGGING_FORMAT = '%(asctime)s %(levelname)s:%(message)s'
 MAC_DS_STORE = '.DS_Store'
 MAC_MERGE_PROGRAM = 'opendiff'
+LINUX_MERGE_PROGRAM = 'diff'
 """
 VIMDIFF
 ]c: jump to the next change
@@ -28,6 +29,7 @@ PLAIN_TEXT_MIME_SUBTYPE = "text/plain"
 JSON_MIME_SUBTYPE = f"{APPLICATION_MIME_TYPE}/json"
 PDF_MIME_SUBTYPE = f"{APPLICATION_MIME_TYPE}/pdf"
 MAC_OS = "Darwin"
+Linux_OS = "Linux"
 UNIX_CR = "\n"
 OBSIDIAN_RESOURCE_FOLDER = "resources"
 OBSIDIAN_SUSPICIOUS_FOLDER = "sus"
