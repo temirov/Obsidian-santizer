@@ -37,27 +37,10 @@ class SystemUtils:
         return cls.__os() == constants.Linux_OS
 
     def open_merge_program(self, left_filepath: Path, right_filepath: Path, merge_program: str = None) -> bool:
-        if self.__is_mac_os():  # macOS
-            if merge_program is None:
-                merge_program = constants.MAC_MERGE_PROGRAM
-
-            try:
-                subprocess.check_call((merge_program, left_filepath, right_filepath))
-            except subprocess.CalledProcessError as err:
-                self.logger.log(str(err), logging.ERROR)
-                return False
-            else:
-                return True
-        elif self.__is_linux():  # Linux
-            if merge_program is None:
-                merge_program = constants.LINUX_MERGE_PROGRAM  # Define this constant in your constants.py
-
-            try:
-                subprocess.check_call((merge_program, str(left_filepath), str(right_filepath)))
-            except subprocess.CalledProcessError as err:
-                self.logger.log(str(err), logging.ERROR)
-                return False
-            else:
-                return True
+        try:
+            subprocess.check_call((merge_program, left_filepath, right_filepath))
+        except subprocess.CalledProcessError as err:
+            self.logger.log(str(err), logging.ERROR)
+            return False
         else:
-            raise RuntimeError(f"Unknown OS: {self.__os()}. The supported OS: Mac")
+            return True

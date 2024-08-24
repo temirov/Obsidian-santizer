@@ -6,17 +6,6 @@ FILE_DATE_FORMAT = "%Y%m%d"
 FILE_DATETIME_FORMAT = f"{FILE_DATE_FORMAT} %H%M%S"
 LOGGING_FORMAT = '%(asctime)s %(levelname)s:%(message)s'
 MAC_DS_STORE = '.DS_Store'
-MAC_MERGE_PROGRAM = 'opendiff'
-LINUX_MERGE_PROGRAM = 'diff'
-"""
-VIMDIFF
-]c: jump to the next change
-[c: jump to the previous change
-do: get changes from other window into the current window
-dp: put the changes from current window into the other window
-:xa	save all changes and close Vim
-:windo set wrapped lines in both screens
-"""
 VIM_MERGE_PROGRAM = 'vimdiff'
 STARTS_WITH_MINUS = re.compile(r'(\n|^)- ')
 STARTS_WITH_PLUS = re.compile(r'(\n|^)\+ ')
