@@ -1,61 +1,124 @@
 # Obsidian Sanitizer
 
-Obsidian Sanitizer is a utility to clear clutter in obsidian markdown files.
+Obsidian Sanitizer is a command-line utility to purge clutter and normalize folder/file names in your Obsidian vault. It
+cleans up stray system files, empty files/folders, renames mis-named Markdown files, and moves non-Markdown assets into
+a `resources/sus` folder.
 
-Over the usage of [Obsidian](https://obsidian.md) on different devices I have noticed that there are often duplicate files, de-synchronized notes and strange recursive folders. This utility is aiming at fixing the clutter, and is a collection of fixes for various issues I have encountered.
+---
+
+## Prerequisites
+
+- **Python** 3.8 or newer installed system-wide
+- **uv** CLI (install via `pip install uv`)
+
+---
+
+## Installation
+
+1. **Clone** the repository:
+   ```bash
+   git clone https://github.com/your-org/obsidian_sanitizer.git
+   cd obsidian_sanitizer
+   ```
+
+2. **(Optional) Bootstrap a persistent UV project**
+   This creates a `.venv` under the project and installs your pinned dependencies there:
+
+   ```bash
+   uv init --bare
+   uv venv
+   uv pip install -r requirements.txt
+   ```
+
+---
 
 ## Usage
 
-```shell
-main.py --source <OBSIDIAN_FOLDER> --glob <GLOB> --log <WARN|INFO|DEBUG>
+### Recommended: persistent UV venv
+
+From the project root (after running the steps above):
+
+```bash
+uv run main.py \
+    --source /path/to/your/ObsidianVault \
+    --glob "*_YourPattern_*" \
+    --log INFO
 ```
 
-## Examples
+* UV will use the `.venv` you created, with all packages from `requirements.txt` installed.
+* Replace `--glob` and `--log` as needed.
 
-```shell
-main.py --glob *_SM-G998U1_* --source "/Users/tyemirov/obsidian copy.md" --log err
+### One-off (no-project) invocation
+
+If you just want a throw-away environment and don’t need to keep a `.venv`, you can skip bootstrapping:
+
+```bash
+deactivate        # ensure any broken venv is deactivated
+uv run --no-project --python 3 main.py \
+    --source /path/to/your/ObsidianVault \
+    --glob "*_YourPattern_*" \
+    --log INFO
 ```
+
+* `--no-project` tells UV not to build/install the local project.
+* `--python 3` forces a clean CPython 3 interpreter.
+* UV will still install all dependencies from `requirements.txt` into a temporary env.
+
+---
 
 ## File comparison
 
-The project uses [vimdiff](https://linux.die.net/man/1/vimdiff#:~:text=Vimdiff%20starts%20Vim%20on%20two,for%20details%20about%20Vim%20itself.) for file comparison. Vim familiarity is expected
+When two files need merging, Obsidian Sanitizer invokes your system’s `vimdiff`. You should be comfortable with these
+shortcuts:
 
-**shortcomings**: 3-way merge is not supported. Use direct editing with _y_ to yank the lines, _p_ to paste and `Ctrl+w+w` to switch between panes
+| Shortcut      | Action                                                |
+|---------------|-------------------------------------------------------|
+| `]c`          | jump to the next change                               |
+| `[c`          | jump to the previous change                           |
+| `do`          | get changes from other window into the current window |
+| `dp`          | put changes from current window into the other window |
+| `:xa`         | save all and exit                                     |
+| `:diffupdate` | refresh diffs                                         |
+| `Ctrl+w w`    | switch between panes                                  |
 
-### Useful vimdiff shortcuts
+---
 
-| Shortcut          | Action                                                    |
-|-------------------|-----------------------------------------------------------|
-| `]c`              | jump to the next change                                   |
-| `[c`              | jump to the previous change                               |
-| `do`              | get changes from other window into the current window     |
-| `dp`              | put the changes from current window into the other window |
-| `:xa`             | save all changes and close Vim                            |
-| `:diffupdate`     | refresh the changes in both panes                         |
-| `:windo set wrap` | set wrapped lines in both screens                         |
-| `Ctrl+w+w`        | switch between the panes                                  |
+## Sanitizer actions
 
-## Actions
+1. Remove macOS system files (e.g. `.DS_Store`)
+2. Delete empty files
+3. Remove empty directories
+4. Rename folders ending in `.md`
+5. Rename folders matching your `--glob` pattern
+6. Move non-Markdown assets into `resources/sus`
+7. Rename files with no extension → `.md`
+8. Rename Markdown files matching your `--glob`
+9. Collect all other application files into `resources/`
+10. Final pass: remove any newly emptied folders
 
-1. Removes Mac system files e.g. .DS_Store
-1. Removes empty filee
-1. Removes empty Folders
-1. Renames folders that have markdown extension
-1. Renames folders that match the provided glog pattern
-1. move_folders(glob) \
-1. Renames markdown files with no extension
-1. Renames markdown files that match the provided glog pattern
-1. move_to_resources_folder(resource_folder)
+---
 
 ## Finite State Machine
 
+The renaming logic is governed by a `transitions`-based FSM. See the diagram:
+
 ![FSM Diagram](utils/fsm_diagram.png)
 
-## Help needed
+---
 
-1. Tests are dismal. Any improvements are welcome
-2. Documentation is lacking. Any improvements are welcome
-3. Extra features
-   1. Find duplicate files regardless of their location
-   2. Deflate a folder: recursively move all files in subdir to the dir and remove subdirs
-   3. Add an ability to prepend YAML templates to markdown files
+## Help & Contributing
+
+* **Tests** are minimal; improvements welcome
+* **Docs** are sparse; pull requests appreciated
+* **Feature ideas**:
+
+    * Detect duplicate files across subfolders
+    * “Deflate” a folder (flatten + cleanup)
+    * Prepend YAML front-matter templates to Markdown
+
+---
+
+## License
+
+This project is licensed under the MIT License.
+See [MIT-LICENSE.txt](MIT-LICENSE.txt) for details.

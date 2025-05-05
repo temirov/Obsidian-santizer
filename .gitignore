@@ -2,5 +2,6 @@
 old
 *.iml
 __pycache__
-venv
+.venv/
 .vscode
+.DS_Store
